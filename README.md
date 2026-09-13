@@ -1,50 +1,75 @@
-# Welcome to your Expo app 👋
+# Ovijog (অভিযোগ)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A **Smart Complaint & Civic Issue Reporting App** for Bangladesh — built as a Mobile App Development (MAD) course project.
 
-## Get started
+Ovijog lets citizens report local civic issues (broken roads, electricity outages, water/sewage problems, safety hazards, etc.) with photos and location, track the status of their reports, and lets designated admins update and resolve them.
 
-1. Install dependencies
+## Features
 
+- **Authentication** — Email/password signup & login (Supabase Auth)
+- **Feed** — Browse all reported complaints with category and status
+- **Report** — Submit a new complaint with title, category, description, location, and photo (camera or gallery)
+- **Complaint Detail** — Full complaint view with reporter info, photo, and status
+- **Profile** — View personal stats (total, pending, resolved reports) and log out
+- **Admin Panel** — Role-restricted screen for updating complaint status (Pending → In Progress → Resolved)
+- **Delete** — Complaint owners and admins can delete complaints
+
+## Tech Stack
+
+- **Frontend:** React Native + Expo Router (TypeScript)
+- **Backend:** Supabase (PostgreSQL, Auth, Storage, Row Level Security)
+- **Build:** EAS Build (Expo Application Services) for standalone Android APK
+
+## Project Structure
+
+```
+app/
+  (auth)/         → Login & Signup screens
+  (tabs)/         → Feed, Report, Profile (bottom tab navigation)
+  complaint/[id]  → Complaint detail screen
+  admin/          → Admin panel (status management)
+contexts/
+  AuthContext.tsx → Global auth/session state
+lib/
+  supabase.js     → Supabase client setup
+```
+
+## Database Schema
+
+Two core tables in Supabase:
+
+- **profiles** — id, full_name, email, role (`user` / `admin`)
+- **complaints** — id, user_id, title, description, category, status, location_text, photo_url, created_at
+
+Row Level Security (RLS) policies ensure:
+- Anyone can view complaints
+- Users can only create/update/delete their own complaints
+- Admins can update or delete any complaint
+
+## Setup
+
+1. Clone the repo and install dependencies:
    ```bash
    npm install
    ```
-
-2. Start the app
-
+2. Create a `.env` file in the project root:
+   ```
+   EXPO_PUBLIC_SUPABASE_URL=your-supabase-url
+   EXPO_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+   ```
+3. Run the SQL schema (see `/supabase` if included) in your Supabase project's SQL Editor.
+4. Start the development server:
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+## Build
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
+To generate a standalone Android APK:
 ```bash
-npm run reset-project
+eas build --platform android --profile preview
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Author
 
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Fahim Uddin — Mobile App Development (MAD) course project
